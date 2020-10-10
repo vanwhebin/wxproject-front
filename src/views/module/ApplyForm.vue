@@ -4,12 +4,12 @@
 
             <van-form @submit="onSubmit">
                 <van-field
-                        v-show="auditNow"
+                        v-if="auditNow"
                         :value="formData.creator.username"
                         label="创建人">
                 </van-field>
                 <van-field
-                        v-show="auditNow"
+                        v-if="auditNow"
                         :value="formData.create_time"
                         label="创建时间">
                 </van-field>
