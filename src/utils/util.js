@@ -177,4 +177,14 @@ export function removeLoadingAnimate (id = '', timeout = 1500) {
 export function setUserToken (accessToken, refreshToken) {
   Vue.ls.set(apiSetting.ACCESS_TOKEN, accessToken, apiSetting.tokenExpire.access_token)
   Vue.ls.set(apiSetting.REFRESH_TOKEN, refreshToken, apiSetting.tokenExpire.refresh_token)
+  console.log(Vue.ls.get(apiSetting.ACCESS_TOKEN))
+}
+
+export function getUserAccessToken () {
+  return Vue.ls.get(apiSetting.ACCESS_TOKEN)
+}
+
+export const getStore = name => {
+  if (!name) return
+  return window.localStorage.getItem(name)
 }

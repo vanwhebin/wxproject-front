@@ -115,11 +115,9 @@
         },
         mounted () {
           if (this.formData) {
-              console.log(this.formData)
               this.formData.attachments =  typeof this.formData.attachments === 'string' ?
                   JSON.parse(this.formData.attachments) : []
               this.form = this.formData
-              console.log(this.form)
           }
         },
         data () {

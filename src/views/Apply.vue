@@ -6,11 +6,12 @@
 </template>
 
 <script>
+    import Vue from 'vue'
     import { login } from '@/api/api'
     import { upload, postCreatProject } from '@/api/api'
     import { Form, Button, Field, NavBar, Uploader, Toast, Dialog, Checkbox, CheckboxGroup } from 'vant'
     import ApplyForm from './module/ApplyForm'
-    import { setUserToken } from '@/utils/util'
+    import { setUserToken, getUserAccessToken } from '@/utils/util'
 
     export default {
         name: "Apply",
@@ -46,7 +47,8 @@
             }
         },
         mounted () {
-            this.getUserInfo()
+            // this.getUserInfo()
+            this.test()
         },
         methods: {
             getUserInfo () {
@@ -61,8 +63,17 @@
                         const accessToken = response.data.access_token
                         const refreshToken = response.data.access_token
                         setUserToken(accessToken, refreshToken)
+                        console.log()
                     })
                 }
+            },
+            test () {
+                const accessToken = '41234123412'
+                const refreshToken = '4123412341234124'
+                setUserToken(accessToken, refreshToken)
+                console.log(Vue.ls.get('Access-Token'))
+                console.log(Vue.ls.get('Refresh-Token'))
+                console.log(getUserAccessToken())
             }
         }
     }
