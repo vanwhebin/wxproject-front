@@ -47,8 +47,8 @@
             }
         },
         mounted () {
-            // this.getUserInfo()
-            this.test()
+            this.getUserInfo()
+            // this.test()
         },
         methods: {
             getUserInfo () {
