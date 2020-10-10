@@ -1,7 +1,5 @@
 import Vue from 'vue'
-import store from '@/store'
 import apiSetting from '@/config'
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '@/store/mutation-types'
 
 /**
  * @param n 金额
@@ -177,8 +175,6 @@ export function removeLoadingAnimate (id = '', timeout = 1500) {
 }
 
 export function setUserToken (accessToken, refreshToken) {
-  Vue.ls.set(ACCESS_TOKEN, accessToken, apiSetting.tokenExpire.access_token)
-  Vue.ls.set(REFRESH_TOKEN, refreshToken, apiSetting.tokenExpire.refresh_token)
-  store.commit('SET_TOKEN', accessToken)
-  store.commit('SET_REFRESH_TOKEN', refreshToken)
+  Vue.ls.set(apiSetting.ACCESS_TOKEN, accessToken, apiSetting.tokenExpire.access_token)
+  Vue.ls.set(apiSetting.REFRESH_TOKEN, refreshToken, apiSetting.tokenExpire.refresh_token)
 }

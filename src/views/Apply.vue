@@ -6,9 +6,11 @@
 </template>
 
 <script>
+    import { login } from '@/api/api'
     import { upload, postCreatProject } from '@/api/api'
     import { Form, Button, Field, NavBar, Uploader, Toast, Dialog, Checkbox, CheckboxGroup } from 'vant'
     import ApplyForm from './module/ApplyForm'
+    import { setUserToken } from '@/utils/util'
 
     export default {
         name: "Apply",
@@ -43,46 +45,24 @@
 
             }
         },
+        mounted () {
+            this.getUserInfo()
+        },
         methods: {
-            onSubmit (values) {
-                console.log('submit', values)
-                console.log('submit', this.form)
-                values.attachments = JSON.stringify(this.form.attachments)
-                postCreatProject(values).then((res) => {
-                    console.log(res)
-                    Dialog.alert({
-                        message: '流程创建成功',
-                    }).then(() => {
-                        this.resetForm()
-                    });
-                })
-            },
-            resetForm () {
-              this.form.category = ""
-              this.form.model_type = ""
-              this.form.context_analysis = ""
-              this.form.market_share_analysis = ""
-              this.form.attachments = []
-            },
-            onOversize(file) {
-                console.log(file);
-                Toast('文件大小不能超过 10M')
-            },
-            uploadFile (file) {
-                var data = new FormData()
-                data.append('file', file.file)
-                upload(data).then((res) => {
-                    console.log(res)
-                    this.form.push(res.data.file)
-                    Toast.clear()
-                })
-            },
-            showReading () {
-                Toast.loading({
-                    message: '上传中...',
-                    forbidClick: true,
-                    duration: 10000
-                })
+            getUserInfo () {
+                let code
+                const strRes = /code=.+/.exec(window.location.search)
+                if (strRes) {
+                    const codeStr = (strRes[0].substr(5))
+                    const symbolLocation = codeStr.indexOf('&')
+                    code = symbolLocation !== -1 ? codeStr.substr(0, symbolLocation) : codeStr
+                    login({ code: code }).then(response => {
+                        console.log(response)
+                        const accessToken = response.data.access_token
+                        const refreshToken = response.data.access_token
+                        setUserToken(accessToken, refreshToken)
+                    })
+                }
             }
         }
     }
