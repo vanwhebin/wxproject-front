@@ -34,6 +34,7 @@
                 auditor: ['1', '2'],
                 form: {
                     category: '',
+                    creator: {},
                     model_type: '',
                     context_analysis: '',
                     attachments: [],
