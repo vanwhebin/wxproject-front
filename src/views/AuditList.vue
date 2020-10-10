@@ -1,6 +1,6 @@
 <template>
     <div>
-        <van-nav-bar :title="curObject.name" style="margin-bottom:15px"></van-nav-bar>
+        <van-nav-bar :title="curObject.name"></van-nav-bar>
         <van-skeleton title :row="15" :loading="loading" class="skeleton">
             <div>
                 <van-cell-group>
@@ -11,7 +11,7 @@
                         :key="key" v-for="(item, key) in projects"
                         @click="goCheck(item)"
                         is-link>
-                        <van-tag type="success" v-if="item.is_done">已审批</van-tag>
+                        <van-tag type="success" v-if="item.result">已完成</van-tag>
                         <van-tag type="warning" v-else>未审批</van-tag>
                     </van-cell>
                 </van-cell-group>
@@ -19,7 +19,8 @@
         </van-skeleton>
         <van-pagination
             style="position:absolute;bottom: 10px;margin:auto;width: 100%;"
-            v-model="pagination.current"
+            @change="getData"
+            v-model="pagination.page"
             :total-items="pagination.total"
             :items-per-page="pagination.num">
         </van-pagination>
@@ -51,7 +52,7 @@
                 },
                 pagination: {
                     num: 10,
-                    current: 1,
+                    page: 1,
                     total: 0
 
                 },
@@ -61,11 +62,18 @@
         },
         methods: {
             getData () {
-                getProjects().then((res) => {
+                const params = { num: this.pagination.num, page: this.pagination.page }
+                getProjects(params).then((res) => {
                     console.log(res)
-                    this.projects = res.data
-                    this.loading = false
+                    this.projects = res.results
+                    this.pagination.total = res.count
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 500)
                 })
+            },
+            change (num) {
+                console.log(num)
             },
             goCheck (item) {
                 this.$router.push({name: "product-audit", params: { projectID: item.id}})

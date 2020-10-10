@@ -7,7 +7,7 @@ import { Empty } from 'vant';
 export default {
     name: "NotFound",
     components: {
-        Empty
+        [Empty.name]: Empty,
     }
 }
 </script>

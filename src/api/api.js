@@ -25,3 +25,13 @@ export const getProjects = (params) => {
 export const getProject = (projectID) => {
   return api.get(`${version}/project/${projectID}`)
 }
+
+
+export const auditProject = (projectID, data) => {
+    return api.patch(`${version}/project/audit/${projectID}`, data)
+}
+
+
+export const auditRight = (projectID) => {
+  return api.get(`${version}/project/right/${projectID}`)
+}

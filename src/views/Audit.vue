@@ -3,32 +3,66 @@
         <van-nav-bar :title="curObject.name" left-text="返回" left-arrow @click-left="onClickLeft"></van-nav-bar>
         <van-skeleton title :row="15" :loading="loading" class="skeleton">
             <ApplyForm :formData="formData"></ApplyForm>
+            <div class="action">
+                <div v-if="!toggleReject">
+                    <div v-show="ownRight">
+                        <van-button type="primary" @click="pass"> 同意</van-button>
+                        <van-button type="info"  style="margin-left:35px" @click="toggleReject=true">否决</van-button>
+                    </div>
+                </div>
+                <div v-else>
+                    <van-field
+                            v-model="memo"
+                            rows="3"
+                            name="memo"
+                            autosize
+                            :autofocus="true"
+                            label="否决意见"
+                            type="textarea"
+                            placeholder="请填写否决意见">
+                    </van-field>
+
+                    <div class="van-hairline--bottom" style="margin-bottom:20px"></div>
+
+                    <van-button type="primary" @click="toggleReject=false"> 取消</van-button>
+                    <van-button type="info"  style="margin-left:35px" @click="reject">确认</van-button>
+                </div>
+            </div>
         </van-skeleton>
-        <div class="action">
-            <van-button type="primary" >同意</van-button>
-            <van-button type="info"  style="margin-left:25px">否决</van-button>
-        </div>
     </div>
 </template>
 
 <script>
-    import { getProject } from '@/api/api'
+    import { getProject, auditProject, auditRight } from '@/api/api'
     import ApplyForm from './module/ApplyForm'
-    import { Button, NavBar, Toast, Dialog, Skeleton } from 'vant'
+    import { Button, NavBar, Toast, Dialog, Skeleton, Field } from 'vant'
     export default {
         name: "Audit",
         components: {
             ApplyForm,
             [NavBar.name]: NavBar,
+            [Field.name]: Field,
             [Button.name]: Button,
             [Skeleton.name]: Skeleton,
             [Dialog.name]: Dialog,
             [Toast.name]: Toast,
         },
+        data () {
+            return {
+                toggleReject: false,
+                ownRight: false,
+                memo: "",
+                curObject: { name: "审批立项申请" },
+                loading: true,
+                projectID: 0,
+                formData: {}
+            }
+        },
         mounted () {
             const params = this.$route.params
             console.log(params)
             if (params.projectID !== undefined) {
+                this.projectID = params.projectID
                 this.getProject(params.projectID)
             } else {
                 Dialog.alert({
@@ -38,25 +72,63 @@
                 });
             }
         },
-        data () {
-            return {
-                curObject: {
-                    name: "审批立项申请"
-                },
-                loading: true,
-                formData: {}
-            }
-        },
         methods: {
             getProject (projectID) {
                 getProject(projectID).then((res) => {
                     console.log(res)
+                    auditRight(projectID).then((res) => {
+                        if (res.data) {
+                            this.ownRight = true
+                        }
+                    })
                     this.formData = res.data
-                    this.loading = false
+                    setTimeout(() => {
+                        this.loading = false
+                    }, 500)
+
                 })
             },
             onClickLeft () {
                 this.$router.push({name: "audit-list"})
+            },
+            pass () {
+                Dialog.confirm({
+                    title: '同意该产品立项',
+                    message: '',
+                })
+                    .then(() => {
+                        // on confirm
+                        this.handleAudit(true)
+                    })
+                    .catch(() => {
+                        // on cancel
+                        return false
+                    });
+            },
+            reject () {
+                if (!this.memo) {
+                    Toast('请填写否决意见')
+                    return false
+                }
+                this.handleAudit(false)
+            },
+            handleAudit (isAccept) {
+                const data = { is_accept: isAccept, memo: this.memo }
+                auditProject(this.projectID, data)
+                    .then((res) => {
+                       Toast.success({
+                           message: "审批已完成",
+                           onClose: () => {
+                               this.$router.push({name: "audit-list"})
+                           }
+                       })
+                    })
+                    .catch(err => {
+                    this.requestFail(err)
+                })
+            },
+            requestFail (err) {
+                console.log(err)
             }
         }
     }
@@ -65,6 +137,6 @@
 <style scoped>
     .action {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 50px;
     }
 </style>

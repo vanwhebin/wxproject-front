@@ -1,7 +1,8 @@
-import Vue from 'vue'
 import axios from 'axios'
 import config from '@/config'
 import { getStore } from '@/utils/storage'
+import { Toast, Dialog } from 'vant'
+
 
 let AUTH_TOKEN = getStore(config.storageOptions.namespace + config.ACCESS_TOKEN) ? getStore(config.storageOptions.namespace + config.ACCESS_TOKEN) : ''
 
@@ -24,10 +25,11 @@ function apiAxios (method, url, params) {
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       method: method,
       url: url,
-      data: method === 'POST' || method === 'PUT' ? params : null,
+      data: method === 'POST' || method === 'PUT' ||  method === 'PATCH' ? params : null,
       params: method === 'GET' || method === 'DELETE' ? params : null,
       withCredentials: false
     }).then(res => {
+      console.log(res)
       resolve(res.data)
     }).catch(err => {
       console.log(err)
@@ -37,34 +39,27 @@ function apiAxios (method, url, params) {
 }
 
 axios.interceptors.request.use(function (config) {
-  // 配置config
-  // if (!AUTH_TOKEN) {
-  //     window.location.href = '/login'
-  // }
-
   config.headers.Accept = 'application/json'
   return config
+}, error => {
+  return Promise.reject(error)
 })
 axios.interceptors.response.use(res => {
+  console.log(res)
   const { data, status } = res
   return { data, status }
 }, error => {
+  console.log(error.response)
   if (error.response) {
-    // console.log(Vue.prototype.$notification)
     if (error.response.status === 401) {
-      Vue.prototype.$notification.error({
-        message: '授权失败',
-        description: '企业微信授权失败，请重新打开页面',
-        duration: 3
+      Dialog.alert({
+        title: '授权失败',
+        message: '企业微信授权失败，请重新打开页面',
+      }).then(() => {
+        window.close()
       })
-      // router.replace({
-      //     path: config.login_page,
-      //     query: {redirect: router.currentRoute.fullPath}
-      // })
-      // .error({
-      //     title: '登录已过期, 请重新登录！'
-      // })
     }
+    return Promise.reject(error)
   }
 })
 
@@ -81,5 +76,8 @@ export default {
   },
   delete: function (url, params) {
     return apiAxios('DELETE', url, params)
+  },
+  patch: function (url, params) {
+    return apiAxios('PATCH', url, params)
   }
 }

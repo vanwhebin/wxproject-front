@@ -7,7 +7,7 @@ import page404 from '@/views/NotFound'
 
 const routes = [
     { path: '/product/flow', name: 'product-flow', component: ProductFlow },
-    { path: '/product/audit-list', name: 'audit-list', component: ProductAuditList },
+    { path: '/product/auditlist', name: 'audit-list', component: ProductAuditList },
     { path: '/product/audit/:projectID([1-9]\\d*)?', name: 'product-audit', component: ProductAudit },
     { path: '*', name: 'notFound', component: page404 }
 ]
