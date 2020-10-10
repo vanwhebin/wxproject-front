@@ -1,10 +1,10 @@
+import Vue from 'vue'
 import axios from 'axios'
 import config from '@/config'
-import { getStore } from '@/utils/storage'
-import { Toast, Dialog } from 'vant'
+import { Dialog } from 'vant'
 
 
-let AUTH_TOKEN = getStore(config.storageOptions.namespace + config.ACCESS_TOKEN) ? getStore(config.storageOptions.namespace + config.ACCESS_TOKEN) : ''
+let AUTH_TOKEN = Vue.ls.get(config.ACCESS_TOKEN) ? Vue.ls.get(config.ACCESS_TOKEN) : ''
 
 // 引用axios
 axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL
