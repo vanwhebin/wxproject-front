@@ -29,6 +29,7 @@
 
 <script>
     import { getProjects } from '@/api/api'
+    import { setSessionStore } from '@/utils/storage'
     import { Cell, CellGroup, Skeleton, Toast, Button, NavBar, Pagination, Tag }  from 'vant'
     export default {
         name: "AuditList",
@@ -43,7 +44,7 @@
             [Skeleton.name]: Skeleton
         },
         mounted () {
-            this.getData()
+            this.getUserInfo()
         },
         data () {
             return {
@@ -72,8 +73,20 @@
                     }, 500)
                 })
             },
-            change (num) {
-                console.log(num)
+            getUserInfo () {
+                let code
+                const strRes = /code=.+/.exec(window.location.search)
+                if (strRes) {
+                    const codeStr = (strRes[0].substr(5))
+                    const symbolLocation = codeStr.indexOf('&')
+                    code = symbolLocation !== -1 ? codeStr.substr(0, symbolLocation) : codeStr
+                    login({ code: code }).then(response => {
+                        console.log(response)
+                        const accessToken = response.data.access_token
+                        setSessionStore(config.ACCESS_TOKEN, accessToken)
+                        this.getData()
+                    })
+                }
             },
             goCheck (item) {
                 this.$router.push({name: "product-audit", params: { projectID: item.id}})

@@ -36,6 +36,7 @@
     import { getProject, auditProject, auditRight } from '@/api/api'
     import ApplyForm from './module/ApplyForm'
     import { Button, NavBar, Toast, Dialog, Skeleton, Field } from 'vant'
+    import { setSessionStore } from '@/utils/storage'
     export default {
         name: "Audit",
         components: {
@@ -63,7 +64,7 @@
             console.log(params)
             if (params.projectID !== undefined) {
                 this.projectID = params.projectID
-                this.getProject(params.projectID)
+                this.getUserInfo()
             } else {
                 Dialog.alert({
                     message: '项目链接错误',
@@ -73,6 +74,21 @@
             }
         },
         methods: {
+            getUserInfo () {
+                let code
+                const strRes = /code=.+/.exec(window.location.search)
+                if (strRes) {
+                    const codeStr = (strRes[0].substr(5))
+                    const symbolLocation = codeStr.indexOf('&')
+                    code = symbolLocation !== -1 ? codeStr.substr(0, symbolLocation) : codeStr
+                    login({ code: code }).then(response => {
+                        console.log(response)
+                        const accessToken = response.data.access_token
+                        setSessionStore(config.ACCESS_TOKEN, accessToken)
+                        this.getProject(this.projectID)
+                    })
+                }
+            },
             getProject (projectID) {
                 getProject(projectID).then((res) => {
                     console.log(res)
