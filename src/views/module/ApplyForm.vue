@@ -2,7 +2,7 @@
     <div>
         <div style="margin-top:20px">
 
-            <van-form @submit="onSubmit">
+            <van-form @submit="onSubmit" class="form">
                 <van-field
                         v-if="auditNow"
                         :value="formData.creator.username"
@@ -13,38 +13,50 @@
                         :value="formData.create_time"
                         label="创建时间">
                 </van-field>
+                <div class="field-label"><span class="field-label-require">*</span>产品细分类目</div>
                 <van-field
+                        :border="true"
+                        clearable
+                        placeholder="请填写产品细分类目"
                         v-model="form.category"
                         name="category"
-                        label="产品细分类目"
-                        :rules="[{ required: true, message: '请填写产品细分类目' }]">
+                        :rules="[{ required: true }]">
                 </van-field>
+                <div class="field-label"><span class="field-label-require">*</span>产品型号</div>
                 <van-field
+                        clearable
+                        :border="true"
+                        placeholder="请填写产品型号"
                         v-model="form.model_type"
                         name="model_type"
-                        label="产品型号"
-                        :rules="[{ required: true, message: '请填写产品型号' }]">
+                        :rules="[{ required: true }]">
                 </van-field>
+                <div class="field-label"><span class="field-label-require">*</span>市场大盘容量及市占分析</div>
                 <van-field
+                        :border="true"
+                        clearable
+                        placeholder="请填写容量及市占分析"
                         v-model="form.market_share_analysis"
                         rows="3"
                         name="market_share_analysis"
                         autosize
-                        label="市场大盘容量及市占分析"
                         type="textarea"
-                        :rules="[{ required: true, message: '请填写容量及市占分析' }]">>
+                        :rules="[{ required: true }]">>
                 </van-field>
+                <div class="field-label"><span class="field-label-require">*</span>产品主要参数和配置</div>
                 <van-field
+                        :border="true"
+                        placeholder="请描述该产品产品主要参数和配置"
                         v-model="form.context_analysis"
                         rows="3"
                         name="context_analysis"
                         autosize
-                        label="场景分析"
+                        clearable
                         type="textarea"
-                        :rules="[{ required: true, message: '请简要描述该产品场景分析' }]">>
+                        :rules="[{ required: true }]">>
                 </van-field>
 
-                <van-checkbox-group
+                <!--<van-checkbox-group
                     v-show="!auditNow"
                     direction="horizontal"
                     disabled style="padding:15px;width:100%;"
@@ -52,9 +64,7 @@
                     <span style="margin-right:10px;font-size: 14px;color:#646566">审批 </span>
                     <van-checkbox name="1">邓望明</van-checkbox>
                     <van-checkbox name="2">杜波</van-checkbox>
-                </van-checkbox-group>
-
-                <div class="van-hairline--bottom" v-show="!auditNow"></div>
+                </van-checkbox-group>-->
 
                 <van-uploader
                         v-show="!auditNow"
@@ -226,5 +236,27 @@
 </script>
 
 <style scoped>
+    .form {
+        margin: 10px;
+        border: #0000004f solid 1px;
+        border-radius: 5px;
+    }
+    .field-label {
+        margin-top:10px;
+        font-size: 14px;
+        line-height: 24px;
+        color: #646566;
+        padding-left: 19px;
+    }
 
+    .field-label-require {
+        color: red
+    }
+    .van-cell::after {
+        border-bottom: 1px solid #c2c3c5 !important;
+    }
+    .van-field__body {
+        border: #00000021 solid 1px !important;
+        border-radius: 5px !important;
+    }
 </style>
