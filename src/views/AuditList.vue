@@ -29,6 +29,7 @@
 
 <script>
     import { getProjects, login } from '@/api/api'
+    import config from '@/config'
     import { setSessionStore } from '@/utils/storage'
     import { Cell, CellGroup, Skeleton, Toast, Button, NavBar, Pagination, Tag }  from 'vant'
     export default {

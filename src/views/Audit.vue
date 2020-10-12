@@ -34,6 +34,7 @@
 
 <script>
     import { getProject, auditProject, auditRight, login } from '@/api/api'
+    import config from '@/config'
     import ApplyForm from './module/ApplyForm'
     import { Button, NavBar, Toast, Dialog, Skeleton, Field } from 'vant'
     import { setSessionStore } from '@/utils/storage'
