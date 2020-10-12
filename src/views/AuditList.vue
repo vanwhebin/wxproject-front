@@ -28,7 +28,7 @@
 </template>
 
 <script>
-    import { getProjects } from '@/api/api'
+    import { getProjects, login } from '@/api/api'
     import { setSessionStore } from '@/utils/storage'
     import { Cell, CellGroup, Skeleton, Toast, Button, NavBar, Pagination, Tag }  from 'vant'
     export default {

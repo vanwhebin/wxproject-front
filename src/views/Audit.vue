@@ -33,7 +33,7 @@
 </template>
 
 <script>
-    import { getProject, auditProject, auditRight } from '@/api/api'
+    import { getProject, auditProject, auditRight, login } from '@/api/api'
     import ApplyForm from './module/ApplyForm'
     import { Button, NavBar, Toast, Dialog, Skeleton, Field } from 'vant'
     import { setSessionStore } from '@/utils/storage'
