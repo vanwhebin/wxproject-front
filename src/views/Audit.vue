@@ -37,7 +37,7 @@
     import config from '@/config'
     import ApplyForm from './module/ApplyForm'
     import { Button, NavBar, Toast, Dialog, Skeleton, Field } from 'vant'
-    import { setSessionStore } from '@/utils/storage'
+    import { setSessionStore, getSessionStore } from '@/utils/storage'
     export default {
         name: "Audit",
         components: {
@@ -65,7 +65,11 @@
             console.log(params)
             if (params.projectID !== undefined) {
                 this.projectID = params.projectID
-                this.getUserInfo()
+                if (!getSessionStore(config.ACCESS_TOKEN)) {
+                    this.getUserInfo()
+                } else {
+                    this.getProject(this.projectID)
+                }
             } else {
                 Dialog.alert({
                     message: '项目链接错误',
