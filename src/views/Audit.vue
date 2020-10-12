@@ -1,6 +1,6 @@
 <template>
     <div>
-        <van-nav-bar :title="curObject.name" left-text="返回" left-arrow @click-left="onClickLeft"></van-nav-bar>
+        <van-nav-bar :title="curObject.name" left-text="返回" left-arrow @click-left="onClickLeft" v-show="!toggleReject"></van-nav-bar>
         <van-skeleton title :row="15" :loading="loading" class="skeleton">
             <ApplyForm :formData="formData"></ApplyForm>
             <div class="action">
