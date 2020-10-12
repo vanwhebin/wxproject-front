@@ -134,15 +134,17 @@
                 this.handleAudit(false)
             },
             handleAudit (isAccept) {
+                Toast.loading("处理中...")
                 const data = { is_accept: isAccept, memo: this.memo }
                 auditProject(this.projectID, data)
                     .then((res) => {
-                       Toast.success({
-                           message: "审批已完成",
-                           onClose: () => {
-                               this.$router.push({name: "audit-list"})
-                           }
-                       })
+                        Toast.clear()
+                        Toast.success({
+                            message: "审批已完成",
+                            onClose: () => {
+                                this.$router.push({name: "audit-list"})
+                            }
+                        })
                     })
                     .catch(err => {
                     this.requestFail(err)
