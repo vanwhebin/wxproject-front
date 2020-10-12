@@ -6,12 +6,13 @@
 </template>
 
 <script>
-    import Vue from 'vue'
     import { login } from '@/api/api'
+    import config from '@/config'
     import { upload, postCreatProject } from '@/api/api'
     import { Form, Button, Field, NavBar, Uploader, Toast, Dialog, Checkbox, CheckboxGroup } from 'vant'
     import ApplyForm from './module/ApplyForm'
-    import { setUserToken, getUserAccessToken } from '@/utils/util'
+    // import { setUserToken } from '@/utils/util'
+    import { setSessionStore } from '@/utils/storage'
 
     export default {
         name: "Apply",
@@ -48,7 +49,6 @@
         },
         mounted () {
             this.getUserInfo()
-            // this.test()
         },
         methods: {
             getUserInfo () {
@@ -61,19 +61,9 @@
                     login({ code: code }).then(response => {
                         console.log(response)
                         const accessToken = response.data.access_token
-                        const refreshToken = response.data.access_token
-                        setUserToken(accessToken, refreshToken)
-                        console.log()
+                        setSessionStore(config.ACCESS_TOKEN, accessToken)
                     })
                 }
-            },
-            test () {
-                const accessToken = '41234123412'
-                const refreshToken = '4123412341234124'
-                setUserToken(accessToken, refreshToken)
-                console.log(Vue.ls.get('Access-Token'))
-                console.log(Vue.ls.get('Refresh-Token'))
-                console.log(getUserAccessToken())
             }
         }
     }
