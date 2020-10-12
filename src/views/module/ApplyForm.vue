@@ -27,7 +27,7 @@
                 </van-field>
                 <van-field
                         v-model="form.market_share_analysis"
-                        rows="5"
+                        rows="3"
                         name="market_share_analysis"
                         autosize
                         label="市场大盘容量及市占分析"
@@ -36,7 +36,7 @@
                 </van-field>
                 <van-field
                         v-model="form.context_analysis"
-                        rows="5"
+                        rows="3"
                         name="context_analysis"
                         autosize
                         label="场景分析"

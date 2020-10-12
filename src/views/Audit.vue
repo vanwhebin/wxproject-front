@@ -158,6 +158,6 @@
 <style scoped>
     .action {
         text-align: center;
-        margin-top: 50px;
+        margin-top: 35px;
     }
 </style>

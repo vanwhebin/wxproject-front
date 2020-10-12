@@ -33,7 +33,7 @@
 <script>
     import { getProjects, login } from '@/api/api'
     import config from '@/config'
-    import { setSessionStore } from '@/utils/storage'
+    import { setSessionStore, getSessionStore } from '@/utils/storage'
     import { Cell, CellGroup, Skeleton, Toast, Button, NavBar, Pagination, Tag, Empty }  from 'vant'
     export default {
         name: "AuditList",
@@ -49,7 +49,11 @@
             [Skeleton.name]: Skeleton
         },
         mounted () {
-            this.getUserInfo()
+            if (!getSessionStore(config.ACCESS_TOKEN)) {
+                this.getUserInfo()
+            } else {
+                this.getData()
+            }
         },
         data () {
             return {
