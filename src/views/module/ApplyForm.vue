@@ -10,6 +10,11 @@
                 </van-field>
                 <van-field
                         v-if="auditNow"
+                        :value="formData.auditor.username"
+                        label="当前审批节点">
+                </van-field>
+                <van-field
+                        v-if="auditNow"
                         :value="formData.create_time"
                         label="创建时间">
                 </van-field>
