@@ -10,7 +10,7 @@
                 </van-field>
                 <van-field
                         v-if="auditNow"
-                        :value="formData.auditor.username"
+                        :value="formData.cur_auditor"
                         label="当前审批节点">
                 </van-field>
                 <van-field
