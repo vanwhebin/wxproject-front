@@ -20,8 +20,6 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>产品细分类目</div>
                 <van-field
-                        :border="true"
-                        clearable
                         placeholder="请填写产品细分类目"
                         v-model="form.category"
                         name="category"
@@ -29,8 +27,6 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>产品型号</div>
                 <van-field
-                        clearable
-                        :border="true"
                         placeholder="请填写产品型号"
                         v-model="form.model_type"
                         name="model_type"
@@ -38,8 +34,6 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>市场大盘容量及市占分析</div>
                 <van-field
-                        :border="true"
-                        clearable
                         placeholder="请填写容量及市占分析"
                         v-model="form.market_share_analysis"
                         rows="3"
@@ -50,13 +44,11 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>产品主要参数和配置</div>
                 <van-field
-                        :border="true"
                         placeholder="请描述该产品产品主要参数和配置"
                         v-model="form.context_analysis"
                         rows="3"
                         name="context_analysis"
                         autosize
-                        clearable
                         type="textarea"
                         :rules="[{ required: true }]">>
                 </van-field>
