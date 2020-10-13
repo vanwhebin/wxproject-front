@@ -76,7 +76,7 @@
                     <van-button icon="upgrade" type="primary">上传文件</van-button>
                 </van-uploader>
 
-                <div style="text-align: center;margin-top:20px;font-size: 14px;cursor:pointer"
+                <div style="text-align: center;margin-top:20px;font-size: 14px;cursor:pointer;margin-bottom: 20px"
                     v-for="(i, k) in formData.attachments" @click="downloadFile(i)"
                     :key="k">
                     <van-icon name="newspaper-o"
