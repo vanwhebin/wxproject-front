@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="margin-top:20px">
-            <van-steps :active="active">
+            <van-steps :active="active" :active-color="activeColor" :active-icon="activeIcon">
                 <van-step v-for="item in stepList">{{item}}</van-step>
             </van-steps>
             <van-form @submit="onSubmit" class="form">
@@ -131,7 +131,9 @@
                     '提交申请',
                     '流程审批',
                     '审批结果',
-                ]
+                ],
+                activeColor: '#07c160',
+                activeIcon: 'checked'
             }
         },
         mounted () {
@@ -146,6 +148,8 @@
                     this.stepList.push(`审批（${result[i].auditor}）`)
                     if (result[i].is_accept === 'reject') {
                         this.stepList.push('立项申请不通过')
+                        this.activeColor = "#C12021"
+                        this.activeIcon = "cross"
                         return true
                     }
                 }
