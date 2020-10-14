@@ -1,7 +1,12 @@
 <template>
     <div>
         <div style="margin-top:20px">
-
+            <van-steps :active="active">
+                <van-step>提交申请</van-step>
+                <van-step>审批（邓望明）</van-step>
+                <van-step>审批（杜波）</van-step>
+                <van-step>产品立项</van-step>
+            </van-steps>
             <van-form @submit="onSubmit" class="form">
                 <van-field
                         v-if="auditNow"
@@ -99,7 +104,7 @@
 
 <script>
     import { upload, postCreatProject } from '@/api/api'
-    import { Form, Button, Field, Uploader, Toast, Dialog, Checkbox, CheckboxGroup, Icon } from 'vant'
+    import { Form, Button, Field, Uploader, Toast, Dialog, Checkbox, CheckboxGroup, Icon, Steps, Step } from 'vant'
 
     export default {
         name: "ApplyForm",
@@ -108,6 +113,8 @@
             [Button.name]: Button,
             [Field.name]: Field,
             [Uploader.name]: Uploader,
+            [Steps.name]: Steps,
+            [Step.name]: Step,
             [Toast.name]: Toast,
             [Icon.name]: Icon,
             [Checkbox.name]: Checkbox,
@@ -129,6 +136,7 @@
         },
         data () {
             return {
+                // active: 2,
                 curObject: {
                     name: '发起立项流程'
                 },
@@ -142,6 +150,8 @@
                     model_type: '',
                     context_analysis: '',
                     attachments: [],
+                    cur_auditor: '',
+                    create_time: '',
                     market_share_analysis: ''
                 }
 
@@ -150,22 +160,34 @@
         computed: {
             auditNow () {
                 return Boolean(this.formData.id)
+            },
+            active () {
+                if (!this.formData.id) {
+                    return 0
+                } else if (this.formData.cur_auditor === '邓望明') {
+                    return 1
+                } else if (this.formData.cur_auditor === '杜波') {
+                    return 2
+                } else {
+                    return 3
+                }
             }
         },
         methods: {
             onSubmit (values) {
-                if (this.uploadFileList.length === 0) {
-                    Toast.fail('请上传附件')
-                    return false
-                }
+
                 Toast.loading('正在执行，请稍侯...')
                 console.log('submit', values)
                 console.log('submit', this.form)
+                if (this.uploadFileList.length > 0) {
+                    // Toast.fail('请上传附件')
+                    // return false
+                    this.uploadFileList.forEach((item) => {
+                        this.form.attachments.push(item.file.url)
+                        return item
+                    })
+                }
 
-                this.uploadFileList.forEach((item) => {
-                    this.form.attachments.push(item.file.url)
-                    return item
-                })
 
                 values.attachments = JSON.stringify(this.form.attachments)
                 postCreatProject(values).then((res) => {
