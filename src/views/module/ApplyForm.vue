@@ -2,21 +2,13 @@
     <div>
         <div style="margin-top:20px">
             <van-steps :active="active">
-                <van-step>提交申请</van-step>
-                <van-step>审批（邓望明）</van-step>
-                <van-step>审批（杜波）</van-step>
-                <van-step>立项申请通过</van-step>
+                <van-step v-for="item in stepList">{{item}}</van-step>
             </van-steps>
             <van-form @submit="onSubmit" class="form">
                 <van-field
                         v-if="auditNow"
-                        :value="formData.creator.username"
+                        :value="formData.creator_name"
                         label="创建人">
-                </van-field>
-                <van-field
-                        v-if="auditNow"
-                        :value="formData.cur_auditor"
-                        label="当前审批节点">
                 </van-field>
                 <van-field
                         v-if="auditNow"
@@ -57,17 +49,6 @@
                         type="textarea"
                         :rules="[{ required: true }]">>
                 </van-field>
-
-                <!--<van-checkbox-group
-                    v-show="!auditNow"
-                    direction="horizontal"
-                    disabled style="padding:15px;width:100%;"
-                    v-model="auditor">
-                    <span style="margin-right:10px;font-size: 14px;color:#646566">审批 </span>
-                    <van-checkbox name="1">邓望明</van-checkbox>
-                    <van-checkbox name="2">杜波</van-checkbox>
-                </van-checkbox-group>-->
-
                 <van-uploader
                         v-show="!auditNow"
                         v-model="uploadFileList"
@@ -127,16 +108,9 @@
               default: {}
           }
         },
-        mounted () {
-          if (this.formData) {
-              this.formData.attachments =  typeof this.formData.attachments === 'string' ?
-                  JSON.parse(this.formData.attachments) : []
-              this.form = this.formData
-          }
-        },
         data () {
             return {
-                // active: 2,
+                // active: 0,
                 curObject: {
                     name: '发起立项流程'
                 },
@@ -150,11 +124,52 @@
                     model_type: '',
                     context_analysis: '',
                     attachments: [],
-                    cur_auditor: '',
                     create_time: '',
                     market_share_analysis: ''
+                },
+                stepList: [
+                    '提交申请',
+                    '流程审批',
+                    '审批结果',
+                ]
+            }
+        },
+        mounted () {
+            console.log(this.formData)
+            if (this.formData.id) {
+                this.stepList = ['提交申请']
+                this.formData.attachments =  typeof this.formData.attachments === 'string' ?
+                    JSON.parse(this.formData.attachments) : []
+                this.form = this.formData
+                let result = this.formData.result
+                for (let i = 0; i < result.length; i++) {
+                    this.stepList.push(`审批（${result[i].auditor}）`)
+                    if (result[i].is_accept === 'reject') {
+                        this.stepList.push('立项申请不通过')
+                        return true
+                    }
                 }
 
+                if (this.formData.is_done) {
+                    this.stepList.push("立项申请通过")
+                } else {
+                    this.stepList.push("审批结果")
+                }
+
+
+
+                // if (this.formData.is_pass) {
+                //     this.active = this.stepList.length - 1
+                // } else {
+                //     if (this.formData.is_done === true) {
+                //         // 流程已结束 则表明审批不通过
+                //         this.stepList = [
+                //             '提交申请',
+                //         ]
+                //     } else {
+                //         // 流程未结束 审批未进行
+                //     }
+                // }
             }
         },
         computed: {
@@ -162,15 +177,48 @@
                 return Boolean(this.formData.id)
             },
             active () {
-                if (!this.formData.id) {
-                    return 0
-                } else if (this.formData.cur_auditor === '邓望明') {
-                    return 1
-                } else if (this.formData.cur_auditor === '杜波') {
-                    return 2
+                if (this.formData.id) {
+                    const result = this.formData.result
+                    for (let i = 0; i < result.length; i++) {
+                        if (result[i].is_accept === 'reject') {
+                            return (this.stepList.length - 1)
+                        }
+
+                        if (result[i].is_accept === null) {
+                            return (i + 1)
+                        }
+                    }
+
+                    return (this.stepList.length - 1)
                 } else {
-                    return 3
+                    return 0
                 }
+
+
+                // if (this.formData.is_pass === true) {
+                //     // 审批通过 流程结束
+                //     return 3
+                // } else {
+                //     // 审批通过未知 null False
+                //     if (this.formData.is_done === true) {
+                //         // 流程已结束 则表明审批不通过
+                //         this.stepList = [
+                //             '提交申请',
+                //         ]
+                //     } else {
+                //         // 流程未结束 审批未进行
+                //     }
+                // }
+
+                // if (!this.formData.id) {
+                //     return 0
+                // } else if (this.formData.cur_auditor === '邓望明') {
+                //     return 1
+                // } else if (this.formData.cur_auditor === '杜波') {
+                //     return 2
+                // } else {
+                //     return 3
+                // }
             }
         },
         methods: {

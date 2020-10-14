@@ -7,7 +7,7 @@
                     <van-cell
                         icon="records"
                         :title="item.model_type"
-                        :label="item.creator.username"
+                        :label="item.creator_name"
                         :key="key" v-for="(item, key) in projects"
                         @click="goCheck(item)"
                         is-link>
