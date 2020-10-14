@@ -5,7 +5,7 @@
                 <van-step>提交申请</van-step>
                 <van-step>审批（邓望明）</van-step>
                 <van-step>审批（杜波）</van-step>
-                <van-step>产品立项</van-step>
+                <van-step>立项申请通过</van-step>
             </van-steps>
             <van-form @submit="onSubmit" class="form">
                 <van-field
