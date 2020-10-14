@@ -4,6 +4,7 @@
             <van-steps :active="active" :active-color="activeColor" :active-icon="activeIcon">
                 <van-step v-for="item in stepList">{{item}}</van-step>
             </van-steps>
+            <van-field label="否定意见" v-show="rejectReason" :value="rejectReason" type="textarea" row="2" autosize></van-field>
             <van-form @submit="onSubmit" class="form">
                 <van-field
                         v-if="auditNow"
@@ -132,6 +133,7 @@
                     '流程审批',
                     '审批结果',
                 ],
+                rejectReason: "",
                 activeColor: '#07c160',
                 activeIcon: 'checked'
             }
@@ -148,6 +150,7 @@
                     this.stepList.push(`审批（${result[i].auditor}）`)
                     if (result[i].is_accept === 'reject') {
                         this.stepList.push('立项申请不通过')
+                        this.rejectReason = result[i].memo
                         this.activeColor = "#C12021"
                         this.activeIcon = "clear"
                         return true
