@@ -49,7 +49,7 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>产品主要参数和配置</div>
                 <van-field
-                        placeholder="请描述该产品产品主要参数和配置"
+                        placeholder="请描述该产品主要参数和配置"
                         v-model="form.context_analysis"
                         rows="3"
                         name="context_analysis"
