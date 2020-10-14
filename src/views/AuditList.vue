@@ -2,7 +2,7 @@
     <div>
         <van-nav-bar :title="curObject.name"></van-nav-bar>
         <van-skeleton title :row="15" :loading="loading" class="skeleton">
-            <div v-if="projects">
+            <div v-if="projects" style="margin-bottom: 50px">
                 <van-cell-group>
                     <van-cell
                         icon="records"
@@ -21,7 +21,7 @@
             </div>
         </van-skeleton>
         <van-pagination
-            style="position:absolute;bottom: 10px;margin:auto;width: 100%;"
+            style="position:fixed;bottom: 5px;width: 100%;"
             @change="getData"
             v-model="pagination.page"
             :total-items="pagination.total"
