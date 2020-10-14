@@ -149,7 +149,7 @@
                     if (result[i].is_accept === 'reject') {
                         this.stepList.push('立项申请不通过')
                         this.activeColor = "#C12021"
-                        this.activeIcon = "cross"
+                        this.activeIcon = "clear"
                         return true
                     }
                 }
