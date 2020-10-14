@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin-bottom: 35px">
         <van-nav-bar :title="curObject.name" left-text="返回" left-arrow @click-left="onClickLeft" v-show="ownRight"></van-nav-bar>
         <van-skeleton title :row="15" :loading="loading" class="skeleton">
             <ApplyForm :formData="formData"></ApplyForm>
@@ -160,6 +160,6 @@
 <style scoped>
     .action {
         text-align: center;
-        margin-top: 35px;
+        padding-top: 30px;
     }
 </style>
