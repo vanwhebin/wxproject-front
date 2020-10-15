@@ -4,7 +4,14 @@
             <van-steps :active="active" :active-color="activeColor" :active-icon="activeIcon">
                 <van-step v-for="item in stepList">{{item}}</van-step>
             </van-steps>
-            <van-field label="否定意见" v-show="rejectReason" :value="rejectReason" type="textarea" row="2" autosize></van-field>
+            <van-field
+                :readonly="Boolean(rejectReason)"
+                label="驳回意见: "
+                v-show="rejectReason"
+                :value="rejectReason"
+                type="textarea"
+                row="2"
+                autosize></van-field>
             <van-form @submit="onSubmit" class="form">
                 <van-field
                         :readonly="Boolean(formData.creator_name)"
