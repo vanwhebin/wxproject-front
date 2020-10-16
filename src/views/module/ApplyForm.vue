@@ -205,6 +205,8 @@
                         }
 
                         if (result[i].is_accept === null) {
+                            this.activeColor = '#468EFF'
+                            this.activeIcon = 'clock'
                             return (i + 1)
                         }
                     }
@@ -213,32 +215,6 @@
                 } else {
                     return 0
                 }
-
-
-                // if (this.formData.is_pass === true) {
-                //     // 审批通过 流程结束
-                //     return 3
-                // } else {
-                //     // 审批通过未知 null False
-                //     if (this.formData.is_done === true) {
-                //         // 流程已结束 则表明审批不通过
-                //         this.stepList = [
-                //             '提交申请',
-                //         ]
-                //     } else {
-                //         // 流程未结束 审批未进行
-                //     }
-                // }
-
-                // if (!this.formData.id) {
-                //     return 0
-                // } else if (this.formData.cur_auditor === '邓望明') {
-                //     return 1
-                // } else if (this.formData.cur_auditor === '杜波') {
-                //     return 2
-                // } else {
-                //     return 3
-                // }
             }
         },
         methods: {
