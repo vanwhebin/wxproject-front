@@ -14,20 +14,20 @@
                 autosize></van-field>
             <van-form @submit="onSubmit" class="form">
                 <van-field
-                        :readonly="Boolean(formData.creator_name)"
+                        :readonly="auditNow"
                         v-if="auditNow"
                         :value="formData.creator_name"
                         label="创建人">
                 </van-field>
                 <van-field
-                        :readonly="Boolean(formData.create_time)"
+                        :readonly="auditNow"
                         v-if="auditNow"
                         :value="formData.create_time"
                         label="创建时间">
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>产品细分类目</div>
                 <van-field
-                        :readonly="Boolean(form.category)"
+                        :readonly="auditNow"
                         placeholder="请填写产品细分类目"
                         v-model="form.category"
                         name="category"
@@ -35,7 +35,7 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>产品型号</div>
                 <van-field
-                        :readonly="Boolean(form.model_type)"
+                        :readonly="auditNow"
                         placeholder="请填写产品型号"
                         v-model="form.model_type"
                         name="model_type"
@@ -43,7 +43,7 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>市场大盘容量及市占分析</div>
                 <van-field
-                        :readonly="Boolean(form.market_share_analysis)"
+                        :readonly="auditNow"
                         placeholder="请填写容量及市占分析"
                         v-model="form.market_share_analysis"
                         rows="3"
@@ -54,7 +54,7 @@
                 </van-field>
                 <div class="field-label"><span class="field-label-require">*</span>产品主要参数和配置</div>
                 <van-field
-                        :readonly="Boolean(form.context_analysis)"
+                        :readonly="auditNow"
                         placeholder="请描述该产品主要参数和配置"
                         v-model="form.context_analysis"
                         rows="3"
