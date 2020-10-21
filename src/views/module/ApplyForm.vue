@@ -214,21 +214,6 @@
                 } else {
                     this.stepList.push("审批结果")
                 }
-
-
-
-                // if (this.formData.is_pass) {
-                //     this.active = this.stepList.length - 1
-                // } else {
-                //     if (this.formData.is_done === true) {
-                //         // 流程已结束 则表明审批不通过
-                //         this.stepList = [
-                //             '提交申请',
-                //         ]
-                //     } else {
-                //         // 流程未结束 审批未进行
-                //     }
-                // }
             }
         },
         computed: {
