@@ -33,6 +33,20 @@
                         name="category"
                         :rules="[{ required: true }]">
                 </van-field>
+                <div class="field-label"><span class="field-label-require">*</span>市场容量</div>
+                <van-field
+                    :readonly="auditNow"
+                    placeholder="请填写产品型号"
+                    v-model="form.type"
+                    name="type">
+                    <div slot="input">
+                        <van-radio-group v-model="form.type" direction="horizontal">
+                            <van-radio name="1">小于300万美金</van-radio>
+                            <van-radio name="2">大于等于300万美金</van-radio>
+                        </van-radio-group>
+                    </div>
+                </van-field>
+
                 <div class="field-label"><span class="field-label-require">*</span>产品型号</div>
                 <van-field
                         :readonly="auditNow"
@@ -59,6 +73,26 @@
                         v-model="form.context_analysis"
                         rows="3"
                         name="context_analysis"
+                        autosize
+                        type="textarea"
+                        :rules="[{ required: true }]">>
+                </van-field>
+                <div class="field-label"><span class="field-label-require">*</span>首单数量</div>
+                <van-field
+                        :readonly="auditNow"
+                        type="digit"
+                        placeholder="请填写首单数量"
+                        v-model="form.first_orders"
+                        name="first_orders"
+                        :rules="[{ required: true }]">
+                </van-field>
+                <div class="field-label"><span class="field-label-require">*</span>月销量预测</div>
+                <van-field
+                        :readonly="auditNow"
+                        placeholder="请简要描述该产品月销量预测"
+                        v-model="form.order_estimate"
+                        rows="3"
+                        name="order_estimate"
                         autosize
                         type="textarea"
                         :rules="[{ required: true }]">>
@@ -99,7 +133,7 @@
 
 <script>
     import { upload, postCreatProject } from '@/api/api'
-    import { Form, Button, Field, Uploader, Toast, Dialog, Checkbox, CheckboxGroup, Icon, Steps, Step } from 'vant'
+    import { RadioGroup, Radio, Form, Button, Field, Uploader, Toast, Dialog, Checkbox, CheckboxGroup, Icon, Steps, Step } from 'vant'
 
     export default {
         name: "ApplyForm",
@@ -113,6 +147,8 @@
             [Toast.name]: Toast,
             [Icon.name]: Icon,
             [Checkbox.name]: Checkbox,
+            [RadioGroup.name]: RadioGroup,
+            [Radio.name]: Radio,
             [CheckboxGroup.name]: CheckboxGroup,
             [Dialog.name]: Dialog,
         },
@@ -224,12 +260,18 @@
                 console.log('submit', values)
                 console.log('submit', this.form)
                 if (this.uploadFileList.length > 0) {
-                    // Toast.fail('请上传附件')
-                    // return false
                     this.uploadFileList.forEach((item) => {
                         this.form.attachments.push(item.file.url)
                         return item
                     })
+                } else {
+                    Toast.fail('请上传ROI分析文件')
+                    return false
+                }
+
+                if (!values.type) {
+                    Toast.fail('请选择市场容量')
+                    return false
                 }
 
 
@@ -314,6 +356,13 @@
 
     .field-label-require {
         color: red
+    }
+    .choose-type {
+        margin-top: 10px;
+        font-size: 14px;
+        line-height: 24px;
+        color: #646566;
+        padding-left: 19px;
     }
     .van-cell::after {
         border-bottom: 1px solid #c2c3c5 !important;
