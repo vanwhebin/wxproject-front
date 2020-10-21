@@ -138,7 +138,7 @@
                 const data = { is_accept: isAccept, memo: this.memo }
                 auditProject(this.projectID, data)
                     .then((res) => {
-                        Toast.clear()
+                        // Toast.clear()
                         Toast.success({
                             message: "审批已完成",
                             onClose: () => {
