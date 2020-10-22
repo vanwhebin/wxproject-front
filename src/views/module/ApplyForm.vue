@@ -40,7 +40,7 @@
                     v-model="form.type"
                     name="type">
                     <div slot="input">
-                        <van-radio-group v-model="form.type" direction="horizontal">
+                        <van-radio-group v-model="form.type" direction="horizontal" :disabled="auditNow">
                             <van-radio name="1">小于300万美金</van-radio>
                             <van-radio name="2">大于等于300万美金</van-radio>
                         </van-radio-group>
