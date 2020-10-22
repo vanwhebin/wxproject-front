@@ -80,7 +80,8 @@
                 <div class="field-label"><span class="field-label-require">*</span>首单数量</div>
                 <van-field
                         :readonly="auditNow"
-                        type="digit"
+                        type="number"
+                        maxlength="10"
                         placeholder="请填写首单数量"
                         v-model="form.first_orders"
                         name="first_orders"
@@ -95,7 +96,32 @@
                         name="orders_estimate"
                         autosize
                         type="textarea"
-                        :rules="[{ required: true }]">>
+                        :rules="[{ required: true }]">
+                </van-field>
+                <van-field
+                    v-show="!auditNow"
+                    :readonly="true"
+                    v-model="roi_report"
+                    center
+                    name="roi_report"
+                    :required="true"
+                    label="ROI报告"
+                    placeholder="请上传ROI分析报告"
+                    :rules="[{ required: true }]"
+                >
+                    <template #button>
+                        <van-uploader
+                                v-model="uploadFileROIList"
+                                style="padding:15px;width:100%"
+                                :accept="acceptType"
+                                :max-size="maxSize"
+                                :max-count="1"
+                                :after-read="uploadROIFile"
+                                :before-read="showReading"
+                                @oversize="onOversize">
+                            <van-button size="small"  type="primary">上传</van-button>
+                        </van-uploader>
+                    </template>
                 </van-field>
                 <van-uploader
                         v-show="!auditNow"
@@ -104,11 +130,20 @@
                         :accept="acceptType"
                         :max-count="5"
                         :max-size="maxSize"
-                        :after-read="uploadFile"
+                        :after-read="uploadOtherFile"
                         :before-read="showReading"
                         @oversize="onOversize">
-                    <van-button icon="upgrade" type="primary">上传文件</van-button>
+                    <van-button icon="upgrade" type="default">其他附件</van-button>
                 </van-uploader>
+
+                <div style="text-align: center;margin-top:20px;font-size: 14px;cursor:pointer;margin-bottom: 20px"
+                     @click="downloadFile(formData.roi_report)">
+                    <van-icon
+                            name="newspaper-o"
+                            size="15px"
+                            v-show="auditNow"
+                    >ROI分析</van-icon>
+                </div>
 
                 <div style="text-align: center;margin-top:20px;font-size: 14px;cursor:pointer;margin-bottom: 20px"
                     v-for="(i, k) in formData.attachments" @click="downloadFile(i.url)"
@@ -168,11 +203,14 @@
                 acceptType: "image/*,.doc,.docx,.pdf,.ppt,.xlsx,.xls",
                 auditor: ['1', '2'],
                 uploadFileList: [],
+                uploadFileROIList: [],
                 submitDisable: false,
+                roi_report: '',
                 form: {
                     category: '',
                     model_type: '',
                     type: '',
+                    roi_report: '',
                     first_orders: '',
                     orders_estimate: '',
                     context_analysis: '',
@@ -252,8 +290,12 @@
                         this.form.attachments.push({name: item.file.name, url: item.file.url})
                         return item
                     })
+                }
+
+                if (this.roi_report.length > 0 && this.form.roi_report) {
+                    values.roi_report = this.form.roi_report
                 } else {
-                    Toast.fail('请上传ROI分析文件')
+                    Toast.fail('请上传ROI分析')
                     return false
                 }
 
@@ -261,7 +303,6 @@
                     Toast.fail('请选择市场容量')
                     return false
                 }
-
 
                 values.attachments = JSON.stringify(this.form.attachments)
                 postCreatProject(values).then((res) => {
@@ -291,7 +332,30 @@
                 console.log(file);
                 Toast('文件大小不能超过 10M')
             },
-            uploadFile (file) {
+            uploadROIFile (file) {
+                this.uploadFile(file, (data) => {
+                    console.log(data)
+                    if (data) {
+                        let el = this.uploadFileROIList.pop()
+                        el.file.url = data.file
+                        this.uploadFileROIList.push(el)
+                        this.form.roi_report = data.file
+                        this.roi_report = '   '
+                        console.log(this.form)
+                    }
+                })
+            },
+            uploadOtherFile (file) {
+                this.uploadFile(file, (data) => {
+                    console.log(data)
+                    if (data) {
+                        let el = this.uploadFileList.pop()
+                        el.file.url = data.file
+                        this.uploadFileList.push(el)
+                    }
+                })
+            },
+            uploadFile (file, callback) {
                 console.log(file)
                 var data = new FormData()
                 data.append('file', file.file)
@@ -301,18 +365,14 @@
                         Toast.fail(res.msg)
                         return false
                     }
-                    let el = this.uploadFileList.pop()
-                    el.file.url = res.data.file
-                    this.uploadFileList.push(el)
+                    this.submitDisable = false
                     Toast.success('上传成功')
-                    // setTimeout(Toast.clear(), 1000)
-                    console.log(this.uploadFileList)
+                    callback(res.data)
                 }).catch(err => {
                     console.log(err)
-                    Toast.clear()
                     Toast.fail(err.msg)
+                    return false
                 })
-                this.submitDisable = false
             },
             downloadFile (file) {
                 console.log(file)
