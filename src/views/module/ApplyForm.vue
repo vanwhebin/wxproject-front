@@ -318,15 +318,17 @@
                 })
             },
             resetForm () {
-                this.form.category = ""
-                this.form.model_type = ""
-                this.form.type = ""
-                this.form.first_orders = ""
-                this.form.orders_estimate = ""
-                this.form.context_analysis = ""
-                this.form.market_share_analysis = ""
+                this.form.category = ''
+                this.form.model_type = ''
+                this.form.type = ''
+                this.form.first_orders = ''
+                this.form.orders_estimate = ''
+                this.form.context_analysis = ''
+                this.form.market_share_analysis = ''
                 this.form.attachments = []
                 this.uploadFileList = []
+                this.uploadFileROIList = []
+                this.roi_report = ''
             },
             onOversize(file) {
                 console.log(file);
