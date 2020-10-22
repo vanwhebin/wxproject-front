@@ -90,9 +90,9 @@
                 <van-field
                         :readonly="auditNow"
                         placeholder="请简要描述该产品月销量预测"
-                        v-model="form.order_estimate"
+                        v-model="form.orders_estimate"
                         rows="3"
-                        name="order_estimate"
+                        name="orders_estimate"
                         autosize
                         type="textarea"
                         :rules="[{ required: true }]">>
@@ -174,7 +174,7 @@
                     model_type: '',
                     type: '',
                     first_orders: '',
-                    order_estimate: '',
+                    orders_estimate: '',
                     context_analysis: '',
                     attachments: [],
                     create_time: '',
@@ -281,7 +281,7 @@
                 this.form.model_type = ""
                 this.form.type = ""
                 this.form.first_orders = ""
-                this.form.order_estimate = ""
+                this.form.orders_estimate = ""
                 this.form.context_analysis = ""
                 this.form.market_share_analysis = ""
                 this.form.attachments = []
