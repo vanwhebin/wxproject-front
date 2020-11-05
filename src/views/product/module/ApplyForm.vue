@@ -2,7 +2,7 @@
     <div>
         <div style="margin-top:20px">
             <van-steps :active="active" :active-color="activeColor" :active-icon="activeIcon">
-                <van-step v-for="item in stepList">{{item}}</van-step>
+                <van-step v-for="(item, key) in stepList" :key="key">{{item}}</van-step>
             </van-steps>
             <van-field
                 :readonly="Boolean(rejectReason)"

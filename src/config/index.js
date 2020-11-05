@@ -1,7 +1,7 @@
 export default {
     token: 'token',
-    apiUrl: process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8003' : 'http://tk.freebie-queen.com',
-    uploadUrl: process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8003/api/v1/upload/' : 'http://tk.freebie-queen.com/api/v1/upload/',
+    apiUrl: process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8000' : 'http://tk.freebie-queen.com',
+    uploadUrl: process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8000/api/v1/upload/' : 'http://tk.freebie-queen.com/api/v1/upload/',
     version: '/v1',
     login_page: '/api/login',
     tokenExpire: {
