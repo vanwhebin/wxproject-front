@@ -58,7 +58,10 @@
 </template>
 
 <script>
-    import { getFlows, getFlow, auditFlow, putSKU, postCreatFlow } from '@/api/sku'
+    import { login } from '@/api/api'
+    import config from '@/config'
+    import { setSessionStore } from '@/utils/storage'
+    import { getFlows, getFlow, putSKU, postCreatFlow } from '@/api/sku'
     import SkuTable from './module/Table'
     import InfoDrawer from "./module/Drawer"
     export default {
@@ -166,7 +169,7 @@
             }
         },
         mounted () {
-            this.getData()
+            this.getUserInfo()
         },
         methods: {
             onSelect (value) {
@@ -287,6 +290,22 @@
                     this.toggleDrawer()
                     this.$refs.infoDrawer.resetForm()
                 })
+            },
+            getUserInfo () {
+                let code, state
+                const strRes = /code=.+/.exec(window.location.search)
+                if (strRes) {
+                    const codeStrArr = strRes[0].split('&')
+                    code = codeStrArr[0].split('=')[1]
+                    state = codeStrArr[1].split('=')[1]
+
+                    login({ code: code, state: state }).then(response => {
+                        console.log(response)
+                        const accessToken = response.data.access_token
+                        setSessionStore(config.ACCESS_TOKEN, accessToken)
+                        this.getData()
+                    })
+                }
             }
         }
     }
