@@ -4,6 +4,7 @@
             <Icon type="ios-film-outline"></Icon>
             毛利不达标产品审批流程
         </p>
+        <a slot="extra" @click="$router.push({ name: 'sku-apply'})">流程列表</a>
         <Steps :current="0">
             <Step :title="item.title" :content="item.desc" v-for="(item, key) in stepArr" :key="key"></Step>
         </Steps>
@@ -49,8 +50,9 @@
 
         <Modal
                 ref="confirmModal"
+                :mask-closable="false"
                 v-model="confirmModal.show"
-                title="确认?"
+                title="操作提示"
                 :loading="confirmModal.loading"
                 @on-ok="submitFlow">
             <p>确认将已选产品SKU发起审批流程?</p>
@@ -77,7 +79,7 @@
             return {
                 confirmModal: {
                     show: false,
-                    loading: false
+                    loading: true
                 },
                 stepArr: [
                     { title: "上传产品列表", desc: "使用模板填充产品列表" },
@@ -615,7 +617,7 @@
             submitFlowBtn () {
                 console.log('submitFlow')
                 if (this.selectedSkuItemArray.length === 0) {
-                    this.$message.warning('请选择SKU')
+                    this.$Message.warning('请选择SKU')
                     return false
                 }
                 this.confirmModal.show = true
@@ -626,7 +628,7 @@
                     console.log(res)
                     this.confirmModal.loading = false
                     this.confirmModal.show = false
-                    this.$messsage.success("创建成功")
+                    this.$Message.success("创建成功")
                     this.selectedSkuItemArray = []
                     this.tableArr = []
                     this.showTable = false

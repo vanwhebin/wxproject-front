@@ -1,18 +1,18 @@
 <template>
     <Card dis-hover style="margin: auto;margin-top:50px;min-height:500px;margin-left:50px;margin-right:50px;">
         <p slot="title">{{ title }}</p>
-        <div>
+        <div v-show="!showTable">
             <Row>
-                <Table stripe :columns="columns" :data="data" style="margin-bottom:10px">
-                    <template slot-scope="{ row }" slot="action" v-show="!row.result">
-                        <Button type="primary" size="small" style="margin-right: 5px" @click="audit(row)">审批</Button>
+                <Table stripe :columns="columns" :data="data" :loading="listLoading" style="margin-bottom:10px">
+                    <template slot-scope="{ row }" slot="action">
+                        <Button type="primary" size="small" :disabled="row.result" style="margin-right: 5px" @click="audit(row)">审批</Button>
                     </template>
                 </Table>
-                <Page :total="total" />
+                <Page :total="pagination.total" :page-size="pagination.num" :current="pagination.page" @on-change="changePage"/>
             </Row>
         </div>
 
-        <div>
+        <div v-show="showTable">
             <Row style="margin-bottom:5px">
                 <Button type="default" @click.prevent="back">
                     返回
@@ -37,6 +37,7 @@
         </div>
         <Modal
                 ref="confirmModal"
+                :mask-closable="false"
                 v-model="confirmModal.show"
                 title="操作提醒"
                 :loading="confirmModal.loading"
@@ -60,8 +61,14 @@
                 total: 100,
                 confirmModal: {
                     show: false,
-                    loading: false
+                    loading: true
                 },
+                pagination: {
+                  num: 10,
+                  page: 1,
+                  total: 0
+                },
+                listLoading: false,
                 selectedFlow: null,
                 action: null,
                 actionSelectedSKU: [],
@@ -111,7 +118,10 @@
         },
         computed: {
             disableSubmit () {
-                return this.selectedFlowTable.length === 0
+                return this.actionSelectedSKU.length === 0
+            },
+            showTable () {
+                return  this.selectedFlowTable.length !== 0
             },
             title () {
                 return  this.selectedFlowTable.length === 0 ? "产品审批流程列表" : "审批列表SKU"
@@ -126,21 +136,25 @@
                 this.actionSelectedSKU = value
             },
             getData () {
-                console.log("getData")
-                getFlows().then((res) => {
+                this.listLoading = true
+                const params = { num: this.pagination.num, page: this.pagination.page }
+                getFlows(params).then((res) => {
                     console.log(res)
                     this.data = res.results
-                    this.total = res.count
+                    this.pagination.total = res.count
+                    setTimeout(() => this.listLoading = false, 800)
                 })
             },
             back () {
                 this.selectedFlowTable = []
             },
             audit (row) {
+                this.tableLoading = true
                 this.selectedFlow = row
                 getFlow(row.flow_id).then((res) => {
                     console.log(res)
                     this.selectedFlowTable = res.data.skus
+                    setTimeout(() => this.tableLoading = false, 500)
                 })
                 console.log(row)
             },
@@ -153,10 +167,17 @@
                 const data = { is_accept: this.action, sku: this.actionSelectedSKU }
                 auditFlow(this.selectedFlow.flow_id, data).then((res) => {
                     console.log(res)
-                    this.$message.success("审批完成")
+                    this.confirmModal.loading = false
+                    this.confirmModal.show = false
+                    this.$Message.success("审批完成")
                     this.getData()
                     this.back()
                 })
+            },
+            changePage (page) {
+                console.log(page)
+                this.pagination.page = page
+                this.getData()
             }
         }
     }

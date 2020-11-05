@@ -18,6 +18,10 @@ export const auditFlow = (flowID, data) => {
     return api.patch(`${version}/sku/audit/${flowID}`, data)
 }
 
+export const putSKU = (SKUID, data) => {
+    return api.put(`${version}/sku/info/${SKUID}`, data)
+}
+
 
 export const auditRight = (flowID) => {
     return api.get(`${version}/sku/right/${flowID}`)

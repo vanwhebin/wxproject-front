@@ -8,9 +8,14 @@
            :columns="columns"
            :data="data"
            :loading="loading"
-           style="min-height:500px"></Table>
+           style="min-height:500px">
+        <template slot-scope="{ row }" slot="action">
+            <Button type="primary" size="small" :disabled="row.result" style="margin-right: 5px" @click="edit(row)">编辑</Button>
+        </template>
+    </Table>
 </template>
 <script>
+
     export default {
         name: "SkuTable",
         props:{
@@ -23,12 +28,22 @@
                 type: Boolean,
                 default: false,
                 require: false
+            },
+            result: {
+                type: Boolean,
+                default: false,
+                require: false
+            },
+            isDone: {
+                type: Boolean,
+                default: false,
+                require: false
             }
         },
         data () {
             return {
                 status: false,
-                columns: [
+                defaultColumns: [
                     {
                         type: 'selection',
                         width: 60,
@@ -107,7 +122,21 @@
                     {
                         title: '备注',
                         key: 'memo',
-                        align: 'center'
+                        align: 'center',
+                        render: (h, params) => {
+                            console.log(params)
+                            const memo = Boolean(params.row.memo) ? params.row.memo : ''
+                            return h('div', [
+                                h('Tooltip', {
+                                    props: {
+                                        content: memo,
+                                    },
+                                    style: "cursor:pointer"
+                                }), h("Icon", {
+                                    props: { type: 'ios-book' },
+                                    style: "cursor:pointer"
+                                })])
+                        }
                     },
                     {
                         title: '采购',
@@ -118,6 +147,59 @@
                 selected: []
             }
         },
+        computed: {
+          columns () {
+              const statusAction = {
+                  title: '操作',
+                  slot: 'action',
+                  align: 'center'
+              }
+              const selection = {
+                  type: 'selection',
+                  width: 60,
+                  align: 'center'
+              }
+              const historyColumn = [
+                  {
+                      title: 'SKU',
+                      key: 'sku',
+                      align: 'center'
+                  },
+                  {
+                      title: '型号',
+                      key: 'model',
+                      align: 'center'
+                  },
+                  {
+                      title: 'SKU名称',
+                      key: 'title',
+                      align: 'center'
+                  },
+                  {
+                      title: '处理状态',
+                      align: 'center',
+                      key: 'result',
+                      render: (h, params) => {
+                          return h('div', [
+                              h('Tag', {
+                                  props: {
+                                      color: this.isDone ? (params.row.result ? 'green': 'orange') : 'purple'
+                                  }
+                              }, this.isDone ? (params.row.result ? '通过':'驳回'): '待审核')])
+                      }
+                  }
+              ]
+              if (this.result) {
+                  if (!this.isDone) {
+                      return historyColumn
+                  }
+                  historyColumn.push(statusAction)
+                  historyColumn.unshift(selection)
+                  return historyColumn
+              }
+              return this.defaultColumns
+          }
+        },
         methods: {
             selectAll () {
                 this.status = !this.status
@@ -125,14 +207,14 @@
                 this.$emit('selectAllCaption', this.status)
             },
             onSelect (selection, row) {
-                console.log('onSelect')
-                console.log(selection)
-                console.log(row)
                 this.selected = []
                 selection.forEach((item) => {
                     this.selected.push(item.id)
                 })
                 this.$emit('onSelect', this.selected)
+            },
+            edit (row) {
+                this.$emit('onEdit', row)
             }
         }
     }
