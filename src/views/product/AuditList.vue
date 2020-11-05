@@ -86,10 +86,12 @@
                 let code
                 const strRes = /code=.+/.exec(window.location.search)
                 if (strRes) {
-                    const codeStr = (strRes[0].substr(5))
-                    const symbolLocation = codeStr.indexOf('&')
-                    code = symbolLocation !== -1 ? codeStr.substr(0, symbolLocation) : codeStr
-                    login({ code: code }).then(response => {
+
+                    const codeStrArr = strRes[0].split('&')
+                    code = codeStrArr[0].split('=')[1]
+                    state = codeStrArr[1].split('=')[1]
+
+                    login({ code: code, state: state }).then(response => {
                         console.log(response)
                         const accessToken = response.data.access_token
                         setSessionStore(config.ACCESS_TOKEN, accessToken)
