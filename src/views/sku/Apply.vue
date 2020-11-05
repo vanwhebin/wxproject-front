@@ -671,7 +671,7 @@
                 }
             },
             downloadTemplate () {
-                window.open(config.apiUrl + "/media/毛利不达标需特批-样表.xlsx", '_blank')
+                window.open(config.apiUrl + "/media/sample.xlsx", '_blank')
             },
             selectAllCaption (status) {
                 console.log(status)
