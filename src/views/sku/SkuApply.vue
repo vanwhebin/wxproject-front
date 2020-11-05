@@ -169,6 +169,7 @@
             }
         },
         mounted () {
+            this.listLoading = true
             this.getUserInfo()
         },
         methods: {
