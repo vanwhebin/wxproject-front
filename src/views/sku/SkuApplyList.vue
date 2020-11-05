@@ -170,12 +170,16 @@
             audit (row) {
                 this.tableLoading = true
                 this.selectedFlow = row
+                let data = []
                 getFlow(row.flow_id).then((res) => {
                     console.log(res)
-                    this.selectedFlowTable = res.data.skus
+                    res.data.skus.forEach((item) => {
+                        let row = { result: item.is_pass, _disabled: item.is_pass }
+                        data.push(Object.assign(row, item.sku))
+                    })
+                    this.selectedFlowTable = data
                     setTimeout(() => this.tableLoading = false, 500)
                 })
-                console.log(row)
             },
             submitFlowBtn (value) {
                 console.log(value)
