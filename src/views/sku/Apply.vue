@@ -14,6 +14,7 @@
                     type="drag"
                     :max-size="maxSize"
                     :on-exceeded-size="onExceedSize"
+                    @before-upload="updateHeader"
                     :headers="uploadHeader"
                     name="file"
                     accept=".xlsx"
@@ -97,7 +98,7 @@
                 uploadUrl: config.apiUrl + '/api/v1/sku/template',
                 token: "",
                 selectedSkuItemArray: [],
-                uploadHeader: { "Authorization": "Bearer " + (token ? token : this.access) },
+                uploadHeader: { "Authorization": "Bearer " + token },
                 tableArr: [
                     {
                         "id": 876,
@@ -603,9 +604,6 @@
             }
         },
         computed: {
-            access () {
-                return this.token
-            },
             disableSubmit () {
                 return this.selectedSkuItemArray.length === 0
             }
@@ -614,6 +612,9 @@
             this.getUserInfo()
         },
         methods: {
+            updateHeader () {
+                this.uploadHeader = { "Authorization": "Bearer " + getSessionStore(config.ACCESS_TOKEN) }
+            },
             submitFlowBtn () {
                 console.log('submitFlow')
                 if (this.selectedSkuItemArray.length === 0) {
