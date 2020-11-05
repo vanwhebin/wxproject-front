@@ -83,7 +83,7 @@
                 })
             },
             getUserInfo () {
-                let code
+                let code, state
                 const strRes = /code=.+/.exec(window.location.search)
                 if (strRes) {
 
