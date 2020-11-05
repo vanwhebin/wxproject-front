@@ -284,8 +284,9 @@
                 console.log(this.skuInfo)
             },
             handleSubmit (formData) {
-                putSKU(formData.id, formData).then(() => {
-                    this.getFlow(this.selectedFlow.flow_id, { flowID: this.selectedFlow.flow_id })
+                const data = Object.assign(formData, { flowID: this.selectedFlow.flow_id })
+                putSKU(formData.id, data).then(() => {
+                    this.getFlow(this.selectedFlow.flow_id)
                     this.$Message.success('SKU信息修改成功')
                     this.toggleDrawer()
                     this.$refs.infoDrawer.resetForm()
