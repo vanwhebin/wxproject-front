@@ -60,7 +60,7 @@
 <script>
     import { login } from '@/api/api'
     import config from '@/config'
-    import { setSessionStore } from '@/utils/storage'
+    import { setSessionStore, getSessionStore } from '@/utils/storage'
     import { getFlows, getFlow, putSKU, postCreatFlow } from '@/api/sku'
     import SkuTable from './module/Table'
     import InfoDrawer from "./module/Drawer"
@@ -85,6 +85,7 @@
                     // { title: "领导审批", desc: "审批流转" },
                     // { title: "流程结束", desc: "企业微信通知" },
                 ],
+                token: '',
                 pagination: {
                     num: 10,
                     page: 1,
@@ -169,8 +170,13 @@
             }
         },
         mounted () {
-            this.listLoading = true
-            this.getUserInfo()
+            const token = getSessionStore(config.ACCESS_TOKEN)
+            if (!token) {
+                this.listLoading = true
+                this.token = token
+                this.getUserInfo()
+            }
+            this.getData()
         },
         methods: {
             onSelect (value) {
@@ -279,12 +285,14 @@
                 row.qty_within_30 = Number(row.qty_within_30)
                 row.inventory = Number(row.inventory)
                 row.coming_inventory = Number(row.coming_inventory)
-                row.gross_profit_rate = Number(row.gross_profit_rate)
-                row.return_rate = Number(row.return_rate)
+                row.gross_profit_rate = (Number(row.gross_profit_rate) * 100)
+                row.return_rate = (Number(row.return_rate) * 100)
                 this.skuInfo = row
-                console.log(this.skuInfo)
+                // console.log(this.skuInfo)
             },
             handleSubmit (formData) {
+                formData.gross_profit_rate = formData.gross_profit_rate / 100
+                formData.return_rate = formData.return_rate / 100
                 const data = Object.assign(formData, { flowID: this.selectedFlow.flow_id })
                 putSKU(formData.id, data).then(() => {
                     this.getFlow(this.selectedFlow.flow_id)
@@ -303,8 +311,8 @@
 
                     login({ code: code, state: state }).then(response => {
                         console.log(response)
-                        const accessToken = response.data.access_token
-                        setSessionStore(config.ACCESS_TOKEN, accessToken)
+                        this.token = response.data.access_token
+                        setSessionStore(config.ACCESS_TOKEN, response.data.access_token)
                         this.getData()
                     })
                 }

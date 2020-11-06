@@ -126,16 +126,20 @@
                         render: (h, params) => {
                             console.log(params)
                             const memo = Boolean(params.row.memo) ? params.row.memo : ''
-                            return h('div', [
-                                h('Tooltip', {
+                            return h('Poptip', {
+                                props: {
+                                    content: memo,
+                                    transfer: true,
+                                    trigger: 'hover'
+                                }
+                            }, [
+                                h('Button', {
                                     props: {
-                                        content: memo,
-                                    },
-                                    style: "cursor:pointer"
-                                }), h("Icon", {
-                                    props: { type: 'ios-book' },
-                                    style: "cursor:pointer"
-                                })])
+                                        type: 'default',
+                                        size: 'small'
+                                    }
+                                }, '查看')]
+                            )
                         }
                     },
                     {

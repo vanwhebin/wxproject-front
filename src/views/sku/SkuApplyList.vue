@@ -43,6 +43,7 @@
                 :loading="confirmModal.loading"
                 @on-ok="submitFlow">
             <p>确认将已选产品SKU执行操作?</p>
+            <Input type="textarea" v-model="rejectReason" :rows="4" v-show="!action" placeholder="(非必填)驳回意见" />
         </Modal>
     </Card>
 
@@ -51,7 +52,7 @@
 <script>
     import { login } from '@/api/api'
     import config from '@/config'
-    import { setSessionStore } from '@/utils/storage'
+    import { setSessionStore, getSessionStore } from '@/utils/storage'
     import { getFlows, getFlow, auditFlow } from '@/api/sku'
     import SkuTable from './module/Table'
     export default {
@@ -71,6 +72,7 @@
                   page: 1,
                   total: 0
                 },
+                rejectReason: '',
                 listLoading: false,
                 selectedFlow: null,
                 action: null,
@@ -109,14 +111,7 @@
                     }
 
                 ],
-                data: [
-                    {
-                        "creator_name": "万伟斌",
-                        "result": false,
-                        "flow_id": 6,
-                        "create_time": "2020-11-04 18:10:03"
-                    }
-                ]
+                data: []
             }
         },
         computed: {
@@ -131,8 +126,12 @@
             }
         },
         mounted () {
-            this.listLoading = true
-            this.getUserInfo()
+            const token = getSessionStore(config.ACCESS_TOKEN)
+            if (!token) {
+                this.listLoading = true
+                this.getUserInfo()
+            }
+            this.getData()
         },
         methods: {
             getUserInfo () {
@@ -167,6 +166,7 @@
             },
             back () {
                 this.selectedFlowTable = []
+                this.rejectReason = ""
             },
             audit (row) {
                 this.tableLoading = true
@@ -185,10 +185,13 @@
             submitFlowBtn (value) {
                 console.log(value)
                 this.action = value === 'pass'
+                if (!this.action) {
+
+                }
                 this.confirmModal.show = true
             },
             submitFlow () {
-                const data = { is_accept: this.action, sku: this.actionSelectedSKU }
+                const data = { is_accept: this.action, sku: this.actionSelectedSKU, memo: this.rejectReason }
                 auditFlow(this.selectedFlow.flow_id, data).then((res) => {
                     console.log(res)
                     this.confirmModal.loading = false

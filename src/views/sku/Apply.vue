@@ -613,7 +613,7 @@
         },
         methods: {
             updateHeader () {
-                this.uploadHeader = { "Authorization": "Bearer " + getSessionStore(config.ACCESS_TOKEN) }
+                this.uploadHeader = Object.assign(this.uploadHeader,{ "Authorization": "Bearer " + getSessionStore(config.ACCESS_TOKEN) })
             },
             submitFlowBtn () {
                 console.log('submitFlow')
