@@ -1,7 +1,7 @@
 <template>
     <Card dis-hover style="margin: auto;margin-top:50px;min-height:500px;margin-left:50px;margin-right:50px;">
         <p slot="title">{{ title }}</p>
-        <a slot="extra" @click="$router.push({ name: 'sku-flow'})">创建流程</a>
+        <a slot="extra" @click="$router.push({ name: 'sku-flow'})" v-show="!listLoading">创建流程</a>
         <div v-show="!showTable">
             <Row>
                 <Table stripe :columns="columns" :data="data" :loading="listLoading" style="margin-bottom:10px">
@@ -17,6 +17,9 @@
             <Steps :current="stepActive" style="margin-bottom:15px">
                 <Step :title="item.title" :content="item.desc" v-for="(item, key) in stepArr" :key="key"></Step>
             </Steps>
+            <Row class="result" v-show="rejectReason">
+                <div style="text-align: center">审批意见: <span style="color:#f90;font-size:16px;font-weight:bold">{{ rejectReason }}</span></div>
+            </Row>
             <Row style="margin-bottom:5px">
                 <Button type="default" @click.prevent="back">
                     返回
@@ -94,15 +97,16 @@
                 listLoading: false,
                 selectedFlow: null,
                 action: null,
+                rejectReason: '',
                 actionSelectedFailedSKU: [],
                 selectedFlowTable: [],
                 tableLoading: false,
                 columns: [
-                    {
-                        title: 'ID',
-                        key: 'flow_id',
-                        align: 'center'
-                    },
+                    // {
+                    //     title: 'ID',
+                    //     key: 'flow_id',
+                    //     align: 'center'
+                    // },
                     {
                         title: '发起人',
                         key: 'creator_name',
@@ -196,6 +200,7 @@
             },
             back () {
                 this.selectedFlowTable = []
+                this.rejectReason = ''
             },
             getFlow (flowID) {
                 let data = []
