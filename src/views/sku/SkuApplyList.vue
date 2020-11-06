@@ -130,8 +130,9 @@
             if (!token) {
                 this.listLoading = true
                 this.getUserInfo()
+            }else {
+                this.getData()
             }
-            this.getData()
         },
         methods: {
             getUserInfo () {

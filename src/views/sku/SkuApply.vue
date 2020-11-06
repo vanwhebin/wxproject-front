@@ -175,8 +175,9 @@
                 this.listLoading = true
                 this.token = token
                 this.getUserInfo()
+            } else {
+                this.getData()
             }
-            this.getData()
         },
         methods: {
             onSelect (value) {
