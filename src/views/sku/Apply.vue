@@ -16,6 +16,7 @@
                     :on-exceeded-size="onExceedSize"
                     @before-upload="updateHeader"
                     name="file"
+                    :headers="uploadHeader"
                     accept=".xlsx"
                     :on-success="afterUpload"
                     :on-error="uploadError"
@@ -97,7 +98,7 @@
                 uploadUrl: config.apiUrl + '/api/v1/sku/template',
                 token: "",
                 selectedSkuItemArray: [],
-                // uploadHeader:
+                uploadHeader: { "Authorization": "Bearer " + getSessionStore(config.ACCESS_TOKEN) },
                 tableArr: []
             }
         },
