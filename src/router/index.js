@@ -9,16 +9,17 @@ import SkuApplyList from '@/views/sku/SkuApplyList'
 import SkuApply from '@/views/sku/SkuApply'
 
 const routes = [
-    { path: '/product/flow', name: 'product-flow', component: ProductFlow },
-    { path: '/product/auditlist', name: 'audit-list', component: ProductAuditList },
-    { path: '/product/audit/:projectID([1-9]\\d*)?', name: 'product-audit', component: ProductAudit },
+    { path: '/product/flow', name: 'product-flow', component: ProductFlow, meta: { title: '产品立项申请'} },
+    { path: '/product/auditlist', name: 'audit-list', component: ProductAuditList, meta: { title: '产品立项列表'}  },
+    { path: '/product/audit/:projectID([1-9]\\d*)?', name: 'product-audit', component: ProductAudit, meta: { title: '产品申请详情'}  },
 
-    { path: '/sku/flow', name: 'sku-flow', component: Apply },
-    { path: '/sku/auditlist', name: 'sku-audit-list', component: SkuApplyList },
-    { path: '/sku/history', name: 'sku-apply', component: SkuApply },
+    { path: '/sku/flow', name: 'sku-flow', component: Apply, meta: { title: '返单特采数据上传'} },
+    { path: '/sku/auditlist', name: 'sku-audit-list', component: SkuApplyList, meta: { title: '返单特采审核列表'} },
+    { path: '/sku/history', name: 'sku-apply', component: SkuApply, meta: { title: '返单特采申请记录'}  },
 
-    { path: '*', name: 'notFound', component: page404 }
+    { path: '*', name: 'notFound', component: page404, meta: { title: '错误，请返回'}  }
 ]
+
 Vue.use(Router)
 
 const router = new Router({
