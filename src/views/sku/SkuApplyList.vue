@@ -167,6 +167,7 @@
             },
             back () {
                 this.selectedFlowTable = []
+                this.actionSelectedSKU = []
                 this.rejectReason = ""
             },
             audit (row) {
