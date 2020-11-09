@@ -10,6 +10,10 @@ export const getFlows = (params) => {
     return api.get(`${version}/sku/list`, params)
 }
 
+export const getHistory = (params) => {
+    return api.get(`${version}/sku/history`, params)
+}
+
 export const getFlow = (flowID) => {
     return api.get(`${version}/sku/${flowID}`)
 }

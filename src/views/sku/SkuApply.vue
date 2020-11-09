@@ -64,7 +64,7 @@
     import { login } from '@/api/api'
     import config from '@/config'
     import { setSessionStore, getSessionStore } from '@/utils/storage'
-    import { getFlows, getFlow, putSKU, postCreatFlow } from '@/api/sku'
+    import { getHistory, getFlow, putSKU, postCreatFlow } from '@/api/sku'
     import SkuTable from './module/Table'
     import InfoDrawer from "./module/Drawer"
     export default {
@@ -115,15 +115,15 @@
                     {
                         title: '处理状态',
                         align: 'center',
-                        key: 'result',
+                        key: 'is_done',
                         render: (h, params) => {
                             console.log(params)
                             return h('div', [
                                 h('Tag', {
                                     props: {
-                                        color: params.row.result ? 'green': 'orange'
+                                        color: params.row.is_done ? 'green': 'orange'
                                     }
-                                }, params.row.result ? '已处理':'处理中')])
+                                }, params.row.is_done ? '已处理':'处理中')])
                         }
                     },
                     {
@@ -191,7 +191,7 @@
             getData () {
                 this.listLoading = true
                 const params = { num: this.pagination.num, page: this.pagination.page }
-                getFlows(params).then((res) => {
+                getHistory(params).then((res) => {
                     console.log(res)
                     this.data = res.results
                     this.pagination.total = res.count
@@ -250,7 +250,7 @@
             check (row) {
                 this.tableLoading = true
                 this.selectedFlow = row
-                this.getFlow(row.flow_id)
+                this.getFlow(row.id)
                 console.log(row)
             },
             submitFlowBtn (value) {
@@ -299,9 +299,9 @@
             handleSubmit (formData) {
                 formData.gross_profit_rate = formData.gross_profit_rate / 100
                 formData.return_rate = formData.return_rate / 100
-                const data = Object.assign(formData, { flowID: this.selectedFlow.flow_id })
+                const data = Object.assign(formData, { flowID: this.selectedFlow.id })
                 putSKU(formData.id, data).then(() => {
-                    this.getFlow(this.selectedFlow.flow_id)
+                    this.getFlow(this.selectedFlow.id)
                     this.$Message.success('SKU信息修改成功')
                     this.toggleDrawer()
                     this.$refs.infoDrawer.resetForm()
